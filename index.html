@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>链接合并管理台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f2f4f6;
+        --panel: #ffffff;
+        --line: #e4e9ef;
+        --ink: #2d343d;
+        --muted: #667587;
+        --brand: #28a8c7;
+        --brand-2: #f0a118;
+        --nav: #232a33;
+        --nav-2: #1b2128;
+        --danger: #dc4343;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Noto Sans TC", sans-serif;
+        color: var(--ink);
+        background:
+          linear-gradient(0deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)),
+          repeating-linear-gradient(
+            0deg,
+            rgba(45, 52, 61, 0.03) 0,
+            rgba(45, 52, 61, 0.03) 1px,
+            transparent 1px,
+            transparent 22px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(45, 52, 61, 0.03) 0,
+            rgba(45, 52, 61, 0.03) 1px,
+            transparent 1px,
+            transparent 22px
+          ),
+          var(--bg);
+      }
+
+      .dashboard,
+      .go-view {
+        min-height: 100vh;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 238px 1fr;
+      }
+
+      .sidebar {
+        background: linear-gradient(180deg, var(--nav), var(--nav-2));
+        color: #d4dbe3;
+        min-height: 100vh;
+        border-right: 1px solid #101317;
+      }
+
+      .logo {
+        height: 72px;
+        display: flex;
+        align-items: center;
+        padding: 0 22px;
+        font: 700 1.95rem "Barlow", sans-serif;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .menu {
+        padding: 12px 10px;
+      }
+
+      .menu a {
+        display: block;
+        padding: 12px 14px;
+        margin-bottom: 6px;
+        color: #d4dbe3;
+        text-decoration: none;
+        border-radius: 6px;
+        border: 1px solid transparent;
+      }
+
+      .menu a.active {
+        color: #ffb623;
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .main {
+        min-width: 0;
+      }
+
+      .topbar {
+        height: 72px;
+        background: #20262e;
+        color: #e6ecf3;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 24px;
+        font-size: 0.92rem;
+        gap: 14px;
+      }
+
+      .content {
+        padding: 20px 22px 26px;
+      }
+
+      .metrics {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .metric {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 14px;
+      }
+
+      .metric .t {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .metric .v {
+        margin-top: 10px;
+        font: 700 1.7rem "Barlow", sans-serif;
+      }
+
+      .actions {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+      }
+
+      .left-actions,
+      .right-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      input,
+      textarea,
+      select {
+        border: 1px solid #cfd8e1;
+        border-radius: 4px;
+        padding: 9px 10px;
+        font: inherit;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      textarea {
+        min-height: 132px;
+        resize: vertical;
+      }
+
+      .search {
+        width: min(500px, 100%);
+      }
+
+      .btn {
+        border: 0;
+        border-radius: 4px;
+        padding: 9px 14px;
+        font: 700 0.92rem "Barlow", "Noto Sans TC", sans-serif;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--brand);
+        color: #fff;
+      }
+
+      .btn-warn {
+        background: var(--brand-2);
+        color: #fff;
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+
+      .btn-light {
+        background: #f5f7fa;
+        border: 1px solid #d9e1ea;
+      }
+
+      .panel {
+        margin-top: 14px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+      }
+
+      .panel-hd {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .panel-hd h2 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .form-grid {
+        padding: 14px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+      }
+
+      .status {
+        min-height: 20px;
+        color: #52708c;
+        font-size: 0.92rem;
+      }
+
+      .table-wrap {
+        overflow: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 11px 10px;
+        text-align: left;
+        font-size: 0.94rem;
+        white-space: nowrap;
+      }
+
+      th {
+        background: #f8fbfd;
+      }
+
+      td.url-cell {
+        max-width: 380px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .mono {
+        font-family: "Barlow", monospace;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 3px 8px;
+        border: 1px solid #d9e1ea;
+        background: #fff;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        color: #607084;
+      }
+
+      .go-view {
+        display: none;
+        padding: 28px 20px;
+      }
+
+      .go-box {
+        width: min(860px, 96vw);
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #dfe6ee;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .go-hd {
+        padding: 14px 16px;
+        background: #f2f7fb;
+        border-bottom: 1px solid #dfe6ee;
+      }
+
+      .go-list {
+        max-height: 60vh;
+        overflow: auto;
+      }
+
+      .go-row {
+        padding: 11px 16px;
+        border-bottom: 1px solid #eef2f7;
+        display: grid;
+        grid-template-columns: 30px 1fr auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .go-row a {
+        color: #2a547f;
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .go-row a:hover {
+        text-decoration: underline;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      @media (max-width: 1080px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          min-height: auto;
+        }
+
+        .logo {
+          height: 62px;
+        }
+
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .actions {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section id="dashboard" class="dashboard">
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="logo">lihi.io</div>
+          <nav class="menu">
+            <a href="#" class="active">短网址</a>
+            <a href="#">数据报表</a>
+            <a href="#">流量分流</a>
+            <a href="#">标签管理</a>
+            <a href="#">API 功能</a>
+          </nav>
+        </aside>
+
+        <section class="main">
+          <div class="topbar">
+            <span>工作群组: 我的群组</span>
+            <span>账号: demo-admin</span>
+          </div>
+
+          <div class="content">
+            <div class="metrics">
+              <div class="metric">
+                <div class="t">短网址数量</div>
+                <div class="v"><span id="metricGroups">0</span> / 500</div>
+              </div>
+              <div class="metric">
+                <div class="t">合并链接总数</div>
+                <div class="v" id="metricLinks">0</div>
+              </div>
+              <div class="metric">
+                <div class="t">不重复点击数</div>
+                <div class="v" id="metricClicks">0</div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <div class="left-actions">
+                <button id="newBtn" class="btn btn-warn">+ 新增短网址</button>
+                <button id="sampleBtn" class="btn btn-light">载入示例</button>
+                <button id="exportBtn" class="btn btn-light">导出 JSON</button>
+              </div>
+              <div class="right-actions">
+                <input id="searchInput" class="search" type="text" placeholder="输入标题、短码、链接关键字搜索" />
+                <select id="sortSelect">
+                  <option value="new">创建时间</option>
+                  <option value="click">点击数</option>
+                  <option value="count">链接数量</option>
+                </select>
+              </div>
+            </div>
+
+            <section id="editorPanel" class="panel hide">
+              <div class="panel-hd">
+                <h2 id="editorTitle">新增短网址</h2>
+                <span class="tag" id="editorHint">每行一个链接，自动去重</span>
+              </div>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="titleInput">标题</label>
+                  <input id="titleInput" type="text" maxlength="80" placeholder="例如：WhatsApp 验证合集" />
+                </div>
+                <div class="field">
+                  <label for="linksInput">链接列表</label>
+                  <textarea id="linksInput" placeholder="https://wa.me/12345678901?text=start\nhttps://wa.me/10987654321?text=start"></textarea>
+                </div>
+                <div class="field">
+                  <label for="generatedLink">生成的短网址</label>
+                  <input id="generatedLink" type="text" readonly placeholder="保存后自动生成" />
+                </div>
+                <div class="left-actions">
+                  <button id="saveBtn" class="btn btn-primary">保存</button>
+                  <button id="cancelBtn" class="btn btn-light">取消</button>
+                  <button id="copyGeneratedBtn" class="btn btn-light">复制短网址</button>
+                </div>
+                <div id="status" class="status"></div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-hd">
+                <h2>短网址列表</h2>
+                <span class="tag" id="listMeta">0 笔</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>短网址</th>
+                      <th>标题</th>
+                      <th>链接数</th>
+                      <th>不重复点击数</th>
+                      <th>创建时间</th>
+                      <th>编辑选项</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableBody"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="goView" class="go-view">
+      <div class="go-box">
+        <div class="go-hd">
+          <h2 id="goTitle" style="margin: 0">链接合集</h2>
+          <div class="status" id="goStatus"></div>
+          <div class="left-actions" style="margin-top: 8px">
+            <button id="openAllBtn" class="btn btn-primary">一键连续打开</button>
+            <button id="copyGoBtn" class="btn btn-light">复制本页地址</button>
+          </div>
+        </div>
+        <div id="goList" class="go-list"></div>
+      </div>
+    </section>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
